@@ -3,6 +3,8 @@ package ru.android.innocurses.shvabrshvabr;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.webkit.WebView;
 import android.widget.*;
 import java.text.*;
 
@@ -28,6 +30,7 @@ public class RssItemDisplayer extends Activity {
                 + sdf.format(selectedRssItem.getPubDate());
 
         titleTv.setText(title);
-        contentTv.setText(content);
+        contentTv.setText(Html.fromHtml(content));
+
     }
 }
