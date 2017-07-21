@@ -5,22 +5,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
     public static RssItem selectedRssItem;
-    String feedUrl = "";
+    String feedUrl = "https://habrahabr.ru/rss/hubs/all/";
     ListView rssListView;
     ArrayList<RssItem> rssItems = new ArrayList<>();
     ArrayAdapter<RssItem> arrayAdapter;
-
+    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -30,21 +29,6 @@ public class MainActivity extends Activity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-
-        final TextView rssURLTV = (TextView) findViewById(R.id.rssURL);
-
-        Button fetchRss = (Button) findViewById(R.id.fetchRss);
-
-        fetchRss.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                feedUrl = rssURLTV.getText().toString();
-                arrayAdapter.notifyDataSetChanged();
-                refreshRssList();
-            }
-        });
 
 
         rssListView = (ListView) findViewById(R.id.rssListView);
@@ -60,19 +44,27 @@ public class MainActivity extends Activity {
             }
         });
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
+
         arrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, rssItems);
         rssListView.setAdapter(arrayAdapter);
-        feedUrl = rssURLTV.getText().toString();
-        refreshRssList();
+        refreshList();
     }
 
-    private void refreshRssList() {
+    private void refreshList() {
 
         ArrayList<RssItem> newItems = RssItem.getRssItems(feedUrl);
-
         rssItems.clear();
         rssItems.addAll(newItems);
         arrayAdapter.notifyDataSetChanged();
+        swipeContainer.setRefreshing(false);
+
     }
 
 }
