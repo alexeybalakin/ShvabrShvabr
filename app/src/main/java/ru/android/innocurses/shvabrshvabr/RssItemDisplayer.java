@@ -19,13 +19,13 @@ public class RssItemDisplayer extends Activity {
 
         String title = "";
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd - hh:mm:ss");
-        title = "\n" + selectedRssItem.getTitle() + "  ( "
-                + sdf.format(selectedRssItem.getPubDate()) + " )\n\n";
+        title = "\n" + selectedRssItem.getTitle() + " )\n";
 
         String content = "";
         content += selectedRssItem.getDescription() + "\n"
                 + selectedRssItem.getLink()  + "\n"
-                + selectedRssItem.getCategory();
+                + selectedRssItem.getCategory()  + "\n\n"
+                + sdf.format(selectedRssItem.getPubDate());
 
         titleTv.setText(title);
         contentTv.setText(content);
